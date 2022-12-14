@@ -27,6 +27,9 @@ blocks:
             - echo "Zipping your newest code from git"; git archive -o "$EB_APP_NAME".zip HEAD
             - export EB_VERSION=`git rev-parse --short HEAD`-`date +%s`
             - aws s3 cp "$EB_APP_NAME".zip s3://$S3_BUCKET_NAME/"$EB_APP_NAME"/"$EB_VERSION".zip
+            - echo "$AWS_DEFAULT_REGION"
+            - echo "$AWS_ACCESS_KEY_ID"
+            - echo "$AWS_SECRET_ACCESS_KEY"
             - echo "${S3_BUCKET_NAME}/${EB_APP_NAME}/${EB_VERSION}"
             - echo "$EB_ENV_NAME"
             - echo "$EB_APP_NAME"
