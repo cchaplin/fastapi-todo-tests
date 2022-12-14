@@ -16,7 +16,7 @@ blocks:
         - name: S3_BUCKET_NAME
           value: elasticbeanstalk-us-east-1-111165224112
         - name: EB_APP_NAME
-          value: fastapi-todo-tests
+          value: fast-api-todo-tests
         - name: EB_ENV_NAME
           value: Fastapitodotests-env
 
@@ -27,13 +27,6 @@ blocks:
             - echo "Zipping your newest code from git"; git archive -o "$EB_APP_NAME".zip HEAD
             - export EB_VERSION=`git rev-parse --short HEAD`-`date +%s`
             - aws s3 cp "$EB_APP_NAME".zip s3://$S3_BUCKET_NAME/"$EB_APP_NAME"/"$EB_VERSION".zip
-            - echo "$AWS_DEFAULT_REGION"
-            - echo "$AWS_ACCESS_KEY_ID"
-            - echo "$AWS_SECRET_ACCESS_KEY"
-            - echo "${S3_BUCKET_NAME}/${EB_APP_NAME}/${EB_VERSION}"
-            - echo "$EB_ENV_NAME"
-            - echo "$EB_APP_NAME"
-            - echo "$S3_BUCKET_NAME"
             - aws elasticbeanstalk create-application-version --application-name "$EB_APP_NAME" --version-label "$EB_VERSION" --source-bundle S3Bucket=$S3_BUCKET_NAME,S3Key="$EB_APP_NAME/$EB_VERSION.zip" --description "`git show -s --format=%s HEAD | cut -c -200`"
             - aws elasticbeanstalk update-environment --environment-name "$EB_ENV_NAME" --version-label "$EB_VERSION"
             - echo "Environment status':' `aws elasticbeanstalk describe-environments --environment-names "$EB_ENV_NAME" | grep '"Status"' | cut -d':' -f2  | sed -e 's/^[^"]*"//' -e 's/".*$//'`"
